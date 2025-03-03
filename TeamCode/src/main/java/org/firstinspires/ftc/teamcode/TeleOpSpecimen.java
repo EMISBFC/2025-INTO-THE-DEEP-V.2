@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
 
@@ -15,27 +14,33 @@ public class TeleOpSpecimen extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        //  manual bulk reads
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs){
+        for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
         elevator = new Elevator(hardwareMap);
 
         telemetry.addData(">", "Press START to start tests");
-        telemetry.addData(">", "Test results will update for each access method.");
         telemetry.update();
 
         waitForStart();
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             resetCache(allHubs);
 
             elevator.elevatorControl(gamepad2);
+            elevator.update();
+
+            telemetry.addData("Elevator Right Pos", elevator.getCurrentPositionRight());
+            telemetry.addData("Elevator Left Pos", elevator.getCurrentPositionLeft());
+            telemetry.update();
         }
     }
-    public void resetCache(List<LynxModule> allHubs){
-        for(LynxModule hub : allHubs){
+
+    public void resetCache(List<LynxModule> allHubs) {
+        for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
     }
