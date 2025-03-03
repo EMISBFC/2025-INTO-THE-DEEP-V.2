@@ -16,22 +16,22 @@ public class TeleOpSpecimen extends LinearOpMode {
     @Override
     public void runOpMode() {
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-        telemetry.addData(">", "Press START to start tests");
-        telemetry.addData(">", "Test results will update for each access method.");
-        telemetry.update();
-
         for (LynxModule hub : allHubs){
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
         elevator = new Elevator(hardwareMap);
 
+        telemetry.addData(">", "Press START to start tests");
+        telemetry.addData(">", "Test results will update for each access method.");
+        telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive()){
             resetCache(allHubs);
 
-            elevator.update();
+            elevator.elevatorControl(gamepad2);
         }
     }
     public void resetCache(List<LynxModule> allHubs){
