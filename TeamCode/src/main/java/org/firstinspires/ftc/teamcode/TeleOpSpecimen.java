@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
 
+@Config
+@TeleOp(name="Teleop RIGHT!!")
 public class TeleOpSpecimen extends LinearOpMode {
     private Elevator elevator;
 
