@@ -1,64 +1,40 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.hardware.lynx.LynxModule;
-import java.util.List;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
+import com.qualcomm.hardware.lynx.LynxModule;
+import java.util.List;
 
 public class Elevator {
-    private DcMotorEx elevatorMotorRight, elevatorMotorLeft;
-    private LynxModule[] allHubs;
+    private DcMotorEx elevatorMotorRight;
+    private DcMotorEx elevatorMotorLeft;
     private PIDController pid;
-    public static boolean block = false;
+    private List<LynxModule> allHubs;
 
-    private double targetPositionRight = 0, targetPositionLeft = 0;
+    private static final int BOTTOM_POSITION = 90;
+    private static final int MIDDLE_POSITION = 1700;
+    private static final int TOP_POSITION = 2550;
 
+    private int targetPositionRight = 0;
+    private int targetPositionLeft = 0;
 
     public Elevator(HardwareMap hardwareMap) {
         elevatorMotorRight = hardwareMap.get(DcMotorEx.class, "liftMotorRight");
         elevatorMotorLeft = hardwareMap.get(DcMotorEx.class, "liftMotorLeft");
 
-        elevatorMotorRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotorLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        elevatorMotorRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        elevatorMotorLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        elevatorMotorRight.setDirection(DcMotorEx.Direction.FORWARD);
+        elevatorMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
 
-        elevatorMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        elevatorMotorRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        elevatorMotorLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        pid = new PIDController(0, 0, 0);
-    }
+        elevatorMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        elevatorMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-   /*public void setTargetPosition(double target){
-        this.targetPosition = target;
-        pid.reset();
-   }*/
+        allHubs = hardwareMap.getAll(LynxModule.class);
 
-   public void elevatorControl(Gamepad gamepad){
-       if (gamepad.dpad_down && !block) {
-           moveToBottom();
-       } else if (gamepad.dpad_left && !block) {
-           moveToMiddle();
-       } else if (gamepad.dpad_up) {
-           moveToTop();
-       }
-       update();
-   }
-
-    public void moveToBottom() {
-        targetPositionRight = 90;
-        targetPositionLeft = 90;
-    }
-
-    public void moveToMiddle() {
-        targetPositionRight = 1700;
-        targetPositionLeft = 1700;
-    }
-
-    public void moveToTop() {
-        targetPositionRight = 2550;
-        targetPositionLeft = 2550;
+        pid = new PIDController(0.01, 0.0, 0.0005);
     }
 
     public void update() {
@@ -68,10 +44,47 @@ public class Elevator {
 
         int currentPositionRight = elevatorMotorRight.getCurrentPosition();
         int currentPositionLeft = elevatorMotorLeft.getCurrentPosition();
+
         double powerRight = pid.calculatePID(targetPositionRight, currentPositionRight);
         double powerLeft = pid.calculatePID(targetPositionLeft, currentPositionLeft);
 
         elevatorMotorRight.setPower(powerRight);
         elevatorMotorLeft.setPower(powerLeft);
     }
+
+    public void elevatorControl(Gamepad gamepad) {
+        if (gamepad.dpad_down) {
+            moveToBottom();
+        } else if (gamepad.dpad_left) {
+            moveToMiddle();
+        } else if (gamepad.dpad_up) {
+            moveToTop();
+        }
+    }
+
+    public void moveToBottom() {
+        setTargetPosition(BOTTOM_POSITION);
+    }
+
+    public void moveToMiddle() {
+        setTargetPosition(MIDDLE_POSITION);
+    }
+
+    public void moveToTop() {
+        setTargetPosition(TOP_POSITION);
+    }
+
+    public int getCurrentPositionRight() {
+        return elevatorMotorRight.getCurrentPosition();
+    }
+
+    public int getCurrentPositionLeft() {
+        return elevatorMotorLeft.getCurrentPosition();
+    }
+
+    public void setTargetPosition(int position) {
+        this.targetPositionRight = position;
+        this.targetPositionLeft = position;
+    }
 }
+
