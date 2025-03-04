@@ -12,6 +12,7 @@ import java.util.List;
 @TeleOp(name="Teleop RIGHT!!")
 public class TeleOpSpecimen extends LinearOpMode {
     private Elevator elevator;
+    private Arm arm;
 
     @Override
     public void runOpMode() {
@@ -21,6 +22,7 @@ public class TeleOpSpecimen extends LinearOpMode {
         }
 
         elevator = new Elevator(hardwareMap);
+        ]arm = new Arm(hardwareMap);
 
         telemetry.addData(">", "Press START to start tests");
         telemetry.addData(">", "Test results will update for each access method.");
@@ -32,6 +34,7 @@ public class TeleOpSpecimen extends LinearOpMode {
             resetCache(allHubs);
 
             elevator.elevatorControl(gamepad2);
+            arm.handleArmSpecimenTele(gamepad2);
         }
     }
     public void resetCache(List<LynxModule> allHubs){

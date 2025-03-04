@@ -25,4 +25,8 @@ public class PIDController {
         intergralSum = 0;
         lastError = 0;
     }
+
+    public double calculate(int currentPos, int targetArm) {
+        return 0;
+    }
 }
