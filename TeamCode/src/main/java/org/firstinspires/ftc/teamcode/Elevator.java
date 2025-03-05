@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.hardware.lynx.LynxModule;
 import java.util.List;
 
 public class Elevator {
     private DcMotorEx elevatorMotorRight;
     private DcMotorEx elevatorMotorLeft;
     private PIDController pid;
-    private List<LynxModule> allHubs;
-
     private static final int BOTTOM_POSITION = 90;
     private static final int MIDDLE_POSITION = 1700;
     private static final int TOP_POSITION = 2550;
@@ -32,15 +29,11 @@ public class Elevator {
         elevatorMotorRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         elevatorMotorLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        allHubs = hardwareMap.getAll(LynxModule.class);
-
         pid = new PIDController(0.01, 0.0, 0.0005);
     }
 
     public void update() {
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
+
 
         int currentPositionRight = elevatorMotorRight.getCurrentPosition();
         int currentPositionLeft = elevatorMotorLeft.getCurrentPosition();

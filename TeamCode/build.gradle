@@ -31,7 +31,8 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
-    implementation 'org.ftclib.ftclib:core:2.1.1'
+//    implementation 'org.ftclib.ftclib:core:2.1.1'
+    implementation "org.solverslib:core:0.2.5"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
