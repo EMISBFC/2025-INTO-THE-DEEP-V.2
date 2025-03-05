@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.List;
 
@@ -22,12 +21,7 @@ public class TeleOpSpecimen extends LinearOpMode {
         }
 
         elevator = new Elevator(hardwareMap);
-        ]arm = new Arm(hardwareMap);
-
-        telemetry.addData(">", "Press START to start tests");
-        telemetry.addData(">", "Test results will update for each access method.");
-        telemetry.update();
-
+        arm = new Arm(hardwareMap);
         waitForStart();
 
         while (opModeIsActive()){
