@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-import static org.firstinspires.ftc.teamcode.Elevator.block;
+//import static org.firstinspires.ftc.teamcode.Elevator.block;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,15 +14,11 @@ import org.firstinspires.ftc.teamcode.Constants.Constants;
 
 
 public class Arm{
-    private static final int UPDATE_INTERVAL_MS = 10; // Update every 10ms
-    private long lastUpdateTime = 0;
     private final PIDController controller;
     private final DcMotor arm;
     private int targetArm;
     private double power;
     private int currentPos;
-    private List<LynxModule> allHubs;
-
 
     public Arm(HardwareMap hardwareMap) {
         arm = hardwareMap.get(DcMotor.class, ConstantNamesHardwaremap.ARM);
@@ -33,11 +29,6 @@ public class Arm{
         controller = new PIDController(Constants.armP, Constants.armI, Constants.armD);
         targetArm = 0; // Default position
 
-        // Enable Bulk Reading
-        allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
     }
 
     public void handleArmSpecimenTele(Gamepad gamepad){
@@ -194,7 +185,7 @@ public class Arm{
 
     public void updateArm() {
         currentPos = arm.getCurrentPosition();
-        double pid = controller.calculate(currentPos, targetArm);
+        double  pid = controller.calculate(currentPos, targetArm);
         double ff = Math.cos(Math.toRadians(currentPos / Constants.TICKS_IN_DEG)) * Constants.armF;
         power = 0.75 * (pid + ff);
 
