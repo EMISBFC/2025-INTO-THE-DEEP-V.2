@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -11,6 +12,8 @@ import java.util.List;
 @TeleOp(name="Teleop RIGHT!!")
 public class TeleOpSpecimen extends LinearOpMode {
     private Elevator elevator;
+    private GripperSpinner gripperSpinner;
+    private lowGripper lowGripper;
 
     @Override
     public void runOpMode() {
@@ -21,6 +24,9 @@ public class TeleOpSpecimen extends LinearOpMode {
         }
 
         elevator = new Elevator(hardwareMap);
+        gripperSpinner = new GripperSpinner(hardwareMap);
+        lowGripper = new lowGripper(hardwareMap);
+
 
         telemetry.addData(">", "Press START to start tests");
         telemetry.update();
@@ -30,8 +36,17 @@ public class TeleOpSpecimen extends LinearOpMode {
         while (opModeIsActive()) {
             resetCache(allHubs);
 
+            // Elevator
             elevator.elevatorControl(gamepad2);
             elevator.update();
+
+            // Gripper Spinner
+            gripperSpinner.handleInput(gamepad1);
+            gripperSpinner.update();
+
+            // Low Gripper
+            lowGripper.lowGripperControl(gamepad1);
+
 
             telemetry.addData("Elevator Right Pos", elevator.getCurrentPositionRight());
             telemetry.addData("Elevator Left Pos", elevator.getCurrentPositionLeft());

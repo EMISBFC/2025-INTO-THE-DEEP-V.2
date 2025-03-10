@@ -5,16 +5,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.hardware.lynx.LynxModule;
 import java.util.List;
+import org.firstinspires.ftc.teamcode.Constants;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 public class Elevator {
     private DcMotorEx elevatorMotorRight;
     private DcMotorEx elevatorMotorLeft;
-    private PIDController pid;
-    private List<LynxModule> allHubs;
 
-    private static final int BOTTOM_POSITION = 90;
-    private static final int MIDDLE_POSITION = 1700;
-    private static final int TOP_POSITION = 2550;
+    private PIDController pid;
+    public static double p = 0.0, i = 0.0, d = 0.0;
+    public static double f = 0.0;
+
+    private List<LynxModule> allHubs;
 
     private int targetPositionRight = 0;
     private int targetPositionLeft = 0;
@@ -34,23 +36,21 @@ public class Elevator {
 
         allHubs = hardwareMap.getAll(LynxModule.class);
 
-        pid = new PIDController(0.01, 0.0, 0.0005);
+        pid = new PIDController(p, i, d);
     }
 
     public void update() {
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
-
         int currentPositionRight = elevatorMotorRight.getCurrentPosition();
         int currentPositionLeft = elevatorMotorLeft.getCurrentPosition();
 
-        double powerRight = pid.calculatePID(targetPositionRight, currentPositionRight);
-        double powerLeft = pid.calculatePID(targetPositionLeft, currentPositionLeft);
+        double powerRight = pid.calculate(targetPositionRight, currentPositionRight);
+        double powerLeft = pid.calculate(targetPositionLeft, currentPositionLeft);
 
         elevatorMotorRight.setPower(powerRight);
         elevatorMotorLeft.setPower(powerLeft);
     }
+
+
 
     public void elevatorControl(Gamepad gamepad) {
         if (gamepad.dpad_down) {
@@ -60,18 +60,19 @@ public class Elevator {
         } else if (gamepad.dpad_up) {
             moveToTop();
         }
+        update();
     }
 
     public void moveToBottom() {
-        setTargetPosition(BOTTOM_POSITION);
+        setTargetPosition(Constants.ELEVATOR_BOTTOM_POSITION);
     }
 
     public void moveToMiddle() {
-        setTargetPosition(MIDDLE_POSITION);
+        setTargetPosition(Constants.ELEVATOR_MIDDLE_POSITION);
     }
 
     public void moveToTop() {
-        setTargetPosition(TOP_POSITION);
+        setTargetPosition(Constants.ELEVATOR_TOP_POSITION);
     }
 
     public int getCurrentPositionRight() {
@@ -87,4 +88,3 @@ public class Elevator {
         this.targetPositionLeft = position;
     }
 }
-
