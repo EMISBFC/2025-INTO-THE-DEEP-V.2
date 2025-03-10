@@ -14,6 +14,7 @@ public class TeleOpSpecimen extends LinearOpMode {
     private Elevator elevator;
     private GripperSpinner gripperSpinner;
     private lowGripper lowGripper;
+    private Arm arm;
 
     @Override
     public void runOpMode() {
@@ -26,6 +27,7 @@ public class TeleOpSpecimen extends LinearOpMode {
         elevator = new Elevator(hardwareMap);
         gripperSpinner = new GripperSpinner(hardwareMap);
         lowGripper = new lowGripper(hardwareMap);
+        arm = new Arm(hardwareMap);
 
 
         telemetry.addData(">", "Press START to start tests");
@@ -43,6 +45,9 @@ public class TeleOpSpecimen extends LinearOpMode {
             // Gripper Spinner
             gripperSpinner.handleInput(gamepad1);
             gripperSpinner.update();
+
+            //Arm
+            arm.handleArmSpecimenTele(gamepad2);
 
             // Low Gripper
             lowGripper.lowGripperControl(gamepad1);
