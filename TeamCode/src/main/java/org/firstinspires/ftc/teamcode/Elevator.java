@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.hardware.lynx.LynxModule;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.Constants;
-import com.arcrobotics.ftclib.controller.PIDController;
+import org.firstinspires.ftc.teamcode.Constants.Constants;
+import com.seattlesolvers.solverslib.controller.PIDController;
 
 public class Elevator {
     private DcMotorEx elevatorMotorRight;
